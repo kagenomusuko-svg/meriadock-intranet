@@ -8,27 +8,27 @@ import supabase from "../utils/supabaseClient";
   - Dropdown menus for roles: Consejo, Supervisor, Operador
   - Logout button
   - Dynamic height calculation for --header-offset
+  - Mobile friendly logic with collapsible menu
 */
 export default function Header() {
   const router = useRouter();
 
   const [openConsejo, setOpenConsejo] = useState(false);
   const [openSupervisor, setOpenSupervisor] = useState(false);
-  const [openOperador, setOpenOperador] = useState(false);
+  const [menuMobile, setMenuMobile] = useState(false);
   const closeTimerConsejo = useRef(null);
   const closeTimerSupervisor = useRef(null);
-  const closeTimerOperador = useRef(null);
   const headerRef = useRef(null);
 
   useEffect(() => () => {
     clearTimeout(closeTimerConsejo.current);
     clearTimeout(closeTimerSupervisor.current);
-    clearTimeout(closeTimerOperador.current);
   }, []);
 
   function openWithCancel(ref) {
     clearTimeout(ref.current);
   }
+
   function closeWithDelay(ref, setter) {
     clearTimeout(ref.current);
     ref.current = setTimeout(() => setter(false), 150);
@@ -153,6 +153,60 @@ export default function Header() {
                 </button>
               </li>
             </ul>
+          </nav>
+
+          {/* Mobile menu */}
+          <nav className="md:hidden">
+            <button
+              onClick={() => setMenuMobile(!menuMobile)}
+              className="text-sm focus:outline-none"
+            >
+              {menuMobile ? "Cerrar ▲" : "Menú ▼"}
+            </button>
+
+            {menuMobile && (
+              <div className="bg-white border-t shadow-sm p-4">
+                <ul className="space-y-2">
+                  <li><Link href="/home">Inicio</Link></li>
+
+                  {/* CONSEJO MOBILE */}
+                  <li>
+                    <details>
+                      <summary className="cursor-pointer">Consejo</summary>
+                      <ul className="pt-2 pl-4 space-y-1">
+                        <li><Link href="/consejo/registrar-programa">Registrar programa</Link></li>
+                        <li><Link href="/consejo/modificar-programa">Modificar programa</Link></li>
+                        <li><Link href="/consejo/cierre-programa">Cierre de programa</Link></li>
+                      </ul>
+                    </details>
+                  </li>
+
+                  {/* SUPERVISOR MOBILE */}
+                  <li>
+                    <details>
+                      <summary className="cursor-pointer">Supervisor</summary>
+                      <ul className="pt-2 pl-4 space-y-1">
+                        <li><Link href="/supervisor/registrar-beneficiarios">Registrar beneficiarios</Link></li>
+                        <li><Link href="/supervisor/beneficiarios-atendidos">Beneficiarios atendidos</Link></li>
+                      </ul>
+                    </details>
+                  </li>
+
+                  {/* OPERADOR */}
+                  <li><Link href="/operador/registrar-interaccion">Registrar interacción</Link></li>
+
+                  {/* 🔴 LOGOUT */}
+                  <li>
+                    <button
+                      onClick={handleLogout}
+                      className="hover:underline focus:outline-none"
+                    >
+                      Cerrar sesión
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            )}
           </nav>
         </div>
 
