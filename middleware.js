@@ -19,6 +19,6 @@ export async function middleware(req) {
 export const config = {
   matcher: [
     // Todas las rutas excepto login y APIs públicas
-    "/((?!login).*)",
+    "/((?!login|api/public).*)",
   ],
 };
