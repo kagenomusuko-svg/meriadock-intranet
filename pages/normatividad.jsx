@@ -9,7 +9,7 @@ export default function Home() {
 
       <main className="container mx-auto px-4 py-8">
         <ExternalHtml
-          src="/assets/html/main/index.html"
+          src="/assets/html/main/normatividad.html"
           title="Inicio - Centro Meriadock"
           minHeight={600}
         />
