@@ -42,6 +42,9 @@ export default function Login() {
       });
       if (authError) throw authError;
 
+      // Crear cookie temporal para el middleware
+      document.cookie = "authenticated=true; Path=/; Max-Age=60; SameSite=Strict;";
+
       // Revisamos flag must_change_password en intranet_users
       const { data: intranetData, error: intranetError } = await supabase
         .from("intranet_users")
