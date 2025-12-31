@@ -7,7 +7,7 @@ export default function Index() {
 export async function getServerSideProps() {
   return {
     redirect: {
-      destination: "/home",
+      destination: "/login",
       permanent: false, // cambiar a true si quieres que sea un redirect 301 permanente
     },
   };
