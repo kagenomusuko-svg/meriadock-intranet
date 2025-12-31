@@ -2,18 +2,19 @@ import { NextResponse } from "next/server";
 
 // Middleware handler
 export async function middleware(req) {
-  // Obtener el token de autenticación desde las cookies
+  // Obtener el token de autenticación y la cookie temporal
   const token = req.cookies.get("access_token");
+  const authenticated = req.cookies.get("authenticated");
 
-  // Si no hay token, redirigir al login
-  if (!token) {
+  // Revisar si no hay autenticación (ni token ni cookie "authenticated")
+  if (!token && !authenticated) {
     const url = req.nextUrl.clone(); // Clonar la URL original
 
-    // Permitir el acceso a '/login' y a recursos estáticos bajo '/_next' y '/public'
+    // Permitir el acceso al login y a recursos públicos/estáticos
     if (
       url.pathname.startsWith("/login") ||
       url.pathname.startsWith("/_next") || // Recursos de Next.js como CSS/JS
-      url.pathname.startsWith("/logo.svg") // Acceso al recurso específico
+      url.pathname.startsWith("/logo.svg") // Imagen del logo
     ) {
       return NextResponse.next();
     }
@@ -23,13 +24,13 @@ export async function middleware(req) {
     return NextResponse.redirect(url);
   }
 
-  // Si el token existe, permitir continuar
+  // Si el token o cookie "authenticated" existe, permitir continuar
   return NextResponse.next();
 }
 
 // Configuración para el middleware
 export const config = {
   matcher: [
-    "/((?!login|api/public).*)" // Asegúrate de proteger todo excepto login y APIs públicas
+    "/((?!login|api/public).*)", // Proteger todas las rutas excepto login y APIs públicas
   ],
 };
